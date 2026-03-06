@@ -7,12 +7,54 @@ import { FaChrome } from "react-icons/fa";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import requestApi from "@/helpers/requestApi";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
     const [ name, setName ] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
+    const router = useRouter();
+
+    async function handleSubmit(event:React.FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+
+        if(!name || !email || !password || !confirmPassword){
+            toast.error("Preencha todos os campos")
+            return;
+        }
+
+        if(password.length < 8){
+            toast.error("A senha deve ter pelo menos 8 caracteres")
+            return;
+        }
+
+        if(password !== confirmPassword){
+            toast.error("As senhas não conferem")
+            return;
+        }
+        
+        try {
+            await requestApi({
+                url: "/users",
+                method: "POST",
+                data: {
+                    name,
+                    email,
+                    password
+                }
+            })
+
+            toast.success("Conta criada com sucesso!")
+            router.push("/login")
+        } catch (error) {
+            console.error(error)
+            toast.error("Ocorreu um erro inesperado. Tente novamente.")
+        }
+    }
 
     return (
         <div className="w-full max-w-md mx-auto bg-linear-to-br
@@ -29,7 +71,7 @@ export default function RegisterForm() {
                     <p>Preencha os dados para criar sua conta</p>
                 </div>
                 <form 
-                    onSubmit={() => {}} 
+                    onSubmit={handleSubmit} 
                     className="space-y-6"
                 >
                     <CustomInput
