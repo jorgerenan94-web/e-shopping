@@ -9,10 +9,27 @@ import { DropdownMenu, DropdownMenuContent,
     DropdownMenuGroup, DropdownMenuItem, 
     DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+interface User {
+    id: string
+    email: string
+    name: string
+    image: string | null
+}
 
 export default function Header() {
-    const  user = JSON.parse(localStorage.getItem("user") || "{}")
+    const [user, setUser] = useState<User | null>(null)
+
     const router = useRouter()
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user") || "{}") as User
+
+        if(user){
+            setUser(user)
+        }
+    }, [localStorage.getItem("user")])
 
     function signOut(){
         localStorage.removeItem("token")
