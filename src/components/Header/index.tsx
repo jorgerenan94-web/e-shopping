@@ -29,7 +29,7 @@ export default function Header() {
         if(user){
             setUser(user)
         }
-    }, [localStorage.getItem("user")])
+    }, [])
 
     function signOut(){
         localStorage.removeItem("token")
