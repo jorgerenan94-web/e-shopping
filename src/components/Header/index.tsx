@@ -11,8 +11,15 @@ import { DropdownMenu, DropdownMenuContent,
 import Image from "next/image";
 
 export default function Header() {
-  const  user = JSON.parse(localStorage.getItem("user") || "{}")
-  const router = useRouter()
+    const  user = JSON.parse(localStorage.getItem("user") || "{}")
+    const router = useRouter()
+
+    function signOut(){
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+
+        router.push("/login")
+    }
 
   return (
     <header
